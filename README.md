@@ -17,12 +17,13 @@ This project implements a state-of-the-art face recognition system based on the 
 
 ### How to Run
 
-1.  **Clone the repository:** `git clone [Repo-Link]`
+1.  **run the FINAL, LAUNCHER-ONLY SCRIPT:** `then step two after it`
 2.  **Install dependencies:** `pip install requirements.`
-3.  **Run the Flask API:** `python app.py INSDIE THE IPYNB`
-4.  **Launch the UI:** Open `index.html` in your browser.
+3.  **Run the Flask API:** `run the cell --- STEP 4: CREATE THE USER INTERFACE AND API SCRIPT ---`
+4.  **Launch the UI:** Open `index.html` in your browser after add your api(ngrok) key to try it.
 ### this is the link for video about it
 [video_about_the_project](https://drive.google.com/file/d/1Vh2xarVQwUbn24089QIyopwUwcKeozOE/view?usp=sharing)
 ---
 
 *Developed by [Qais Qasem].*
+
