@@ -22,6 +22,7 @@ This project implements a state-of-the-art face recognition system based on the 
 3.  **Run the Flask API:** `python app.py INSDIE THE IPYNB`
 4.  **Launch the UI:** Open `index.html` in your browser.
 ### this is the link for video about it
-[text](https://drive.google.com/file/d/1Vh2xarVQwUbn24089QIyopwUwcKeozOE/view?usp=sharing)
+[video_about_the_project](https://drive.google.com/file/d/1Vh2xarVQwUbn24089QIyopwUwcKeozOE/view?usp=sharing)
 ---
+
 *Developed by [Qais Qasem].*
