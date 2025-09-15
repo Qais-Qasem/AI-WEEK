@@ -1,0 +1,24 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J.A.R.V.I.S. - Identity Verification</title>
+    <style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;background-color:#121212;color:#e0e0e0}.container{background-color:#1e1e1e;padding:40px;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.3);text-align:center;border:1px solid #333;max-width:500px;width:100%}h1{color:#00aaff;margin-bottom:20px}select,button,input[type=file]{width:100%;padding:12px;margin-bottom:20px;border-radius:8px;border:1px solid #444;background-color:#2c2c2c;color:#e0e0e0;font-size:16px;box-sizing:border-box}button{background-color:#0077cc;cursor:pointer;font-weight:700;transition:background-color .3s}button:hover{background-color:#005599}button:disabled{background-color:#555;cursor:not-allowed}#image-preview{max-width:100%;max-height:200px;margin-top:10px;border-radius:8px;border:1px solid #444;display:none}#result{margin-top:20px;padding:15px;border-radius:8px;font-size:1.2em;font-weight:700}.granted{background-color:#1a4a1a;color:#aaffaa;border:1px solid #339933}.denied{background-color:#4a1a1a;color:#ffaaaa;border:1px solid #993333}.spinner{border:4px solid #f3f3f3;border-top:4px solid #0077cc;border-radius:50%;width:30px;height:30px;animation:spin 1s linear infinite;margin:20px auto;display:none}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>
+</head>
+<body>
+    <div class="container">
+        <h1>J.A.R.V.I.S. Authentication</h1>
+        <select id="username-select"><option value="">-- Select Claimed Identity --</option></select>
+        <input type="file" id="image-upload" accept="image/*">
+        <img id="image-preview" src="#" alt="Image Preview"/>
+        <button id="verify-button" disabled>Verify Identity</button>
+        <div id="spinner" class="spinner"></div><div id="result"></div>
+    </div>
+    <script>
+        const API_URL = "{{ API_URL_FOR_JS }}";
+        const CELEBRITY_NAMES = {{ CELEBRITY_LIST_FOR_JS | tojson }};
+        const usernameSelect=document.getElementById("username-select"),imageUpload=document.getElementById("image-upload"),imagePreview=document.getElementById("image-preview"),verifyButton=document.getElementById("verify-button"),resultDiv=document.getElementById("result"),spinner=document.getElementById("spinner");let uploadedFile=null;CELEBRITY_NAMES.sort().forEach(e=>{const t=document.createElement("option");t.value=e,t.textContent=e,usernameSelect.appendChild(t)});const reader=new FileReader;imageUpload.addEventListener("change",e=>{e.target.files&&e.target.files[0]&&(uploadedFile=e.target.files[0],reader.onload=e=>{imagePreview.src=e.target.result,imagePreview.style.display="block",checkFormValidity()},reader.readAsDataURL(uploadedFile))}),usernameSelect.addEventListener("change",checkFormValidity),verifyButton.addEventListener("click",()=>{spinner.style.display="block",verifyButton.disabled=!0,resultDiv.innerHTML="",resultDiv.className="";const e=new FileReader;e.readAsDataURL(uploadedFile),e.onload=async()=>{const t=e.result.split(",")[1],n=usernameSelect.value;try{const a=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:n,image:t})}),l=await a.json();if(!a.ok)throw new Error(l.message||"An unknown error occurred.");displayResult(l)}catch(s){displayError(s)}finally{spinner.style.display="none",checkFormValidity()}}});function checkFormValidity(){verifyButton.disabled=!(uploadedFile&&usernameSelect.value)}function displayResult(e){resultDiv.textContent=`Status: ${e.status}`,"Access Granted"===e.status?(resultDiv.className="granted",resultDiv.innerHTML+=`<br>Welcome, ${e.verified_identity}. (Confidence: ${(100*e.confidence).toFixed(2)}%)`):(resultDiv.className="denied",resultDiv.innerHTML+=`<br>Identity mismatch. Predicted: ${e.predicted_identity}. (Confidence: ${(100*e.confidence).toFixed(2)}%)`)}function displayError(e){resultDiv.className="denied",resultDiv.textContent=`Error: ${e.message}`}
+    </script>
+</body>
+</html>
